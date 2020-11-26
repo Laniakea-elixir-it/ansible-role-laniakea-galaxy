@@ -30,7 +30,16 @@
     dest: '/etc/apt/preferences.d/'
   become_user: root
   become_method: sudo
-  when: ansible_os_family == "Debian"
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '16.04'
+
+- name: '[Ubuntu20.04] python3 to python alias'
+  become: yes
+  become_method: sudo
+  file:
+    src: /usr/bin/python3 
+    dest: /usr/bin/python
+    state: link
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
 
 - name: 'User rules for {{ LA_galaxy_user.name }} to allow no passwd for sudo'
   lineinfile:
@@ -40,4 +49,10 @@
     insertafter: EOF
   vars:
    ansible_python_interpreter: /usr/bin/python
+
+- name: '[Ubuntu20.04] install dependency'
+  package:
+    name: acl
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
+
 
