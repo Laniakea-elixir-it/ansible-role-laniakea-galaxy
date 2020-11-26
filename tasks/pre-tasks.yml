@@ -51,8 +51,9 @@
    ansible_python_interpreter: /usr/bin/python
 
 - name: '[Ubuntu20.04] install dependency'
-  package:
+  apt:
     name: acl
+    update_cache: yes
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
 
 

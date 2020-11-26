@@ -1,0 +1,24 @@
+---
+
+- name: Include nginx role [ubuntu 20.04]
+  include_role:
+    name: galaxyproject.nginx
+  vars:
+    nginx_flavor: full
+    nginx_servers:
+      - galaxy
+    nginx_enable_default_server: false
+    nginx_conf_http:
+      client_max_body_size: 1g
+    galaxy_server_dir: "{{ laniakea_galaxy_server_dir }}" 
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
+
+- name: download and recompile nginx to add upload module
+  become: true
+  become_method: sudo
+  script: nginx_upload_module.sh
+
+- name: restart nginx
+  systemd:
+    state: restarted
+    name: nginx

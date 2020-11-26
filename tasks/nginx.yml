@@ -55,18 +55,6 @@
     galaxy_server_dir: "{{ laniakea_galaxy_server_dir }}" 
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '16.04'
 
-- name: Include nginx role [ubuntu 20.04]
-  include_role:
-    name: galaxyproject.nginx
-  vars:
-    nginx_flavor: extras
-    nginx_servers:
-      - galaxy
-    nginx_conf_http:
-      client_max_body_size: 1g
-    galaxy_server_dir: "{{ laniakea_galaxy_server_dir }}" 
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
-
 - name: Include nginx role [centos]
   include_role:
     name: galaxyproject.nginx
