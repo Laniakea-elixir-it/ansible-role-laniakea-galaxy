@@ -71,3 +71,82 @@
     nginx_conf_user: galaxy
     nginx_conf_group: galaxy
   when: ansible_os_family == "RedHat" 
+
+##############Ubuntu 20.04 install nginx and add upload module###############  
+
+- name: '[Ubuntu 20.04]install nginx and compiler dep'
+  apt:
+    name: ['nginx', 'libpcre3', 'libpcre3-dev', 'libssl-dev']
+    state: present
+    update_cache: true
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
+
+- name: modify nginx config
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertbefore: '^events '
+    line: 'load_module modules/ngx_http_upload_module.so;'
+    state: present
+  register: nginxload
+  
+- name: '[Ubuntu 20.04] download nginx packages and module to compile and incorporate' 
+  get_url:
+    url: "{{ item}}"
+    dest: /opt/
+  with_items:
+    - https://github.com/vkholodkov/nginx-upload-module/archive/2.3.0.tar.gz
+    - https://nginx.org/download/nginx-1.18.0.tar.gz
+  when: nginxload.changed
+
+- name: '[Ubuntu 20.04]uzip nginx and module'
+  unarchive:
+    src: "{{ item }}"
+    dest: /opt
+    remote_src: yes
+  with_items:
+    - /opt/2.3.0.tar.gz
+    - /opt/nginx-1.18.tar.gz
+  when: nginxload.changed
+
+- name: compile
+  shell: ./configure --with-compat --add-dynamic-module=/opt/nginx-upload-module-2.3.0; make modules
+  args:
+    chdir: /opt/nginx-1.18.0
+  when: nginxload.changed
+
+- name: copy module to destination
+  copy:
+    remote_src: yes
+    src: /opt/objs/ngx_http_upload_module.so
+    dest: /usr/share/nginx/modules/ngx_http_upload_module.so
+  when: nginxload.changed
+
+- name: clean
+  file:
+    state: absent
+    path: /opt/
+  when: nginxload.changed
+
+    #- name: download and recompile nginx to add upload module
+    #  become: true
+    #  become_method: sudo
+    #  script: nginx_upload_module.sh
+    #  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
+
+- name: Include nginx role [ubuntu 20.04]
+  include_role:
+    name: galaxyproject.nginx
+  vars:
+    nginx_flavor: full
+    nginx_servers:
+      - galaxy
+    nginx_enable_default_server: false
+    nginx_conf_http:
+      client_max_body_size: 1g
+    galaxy_server_dir: "{{ laniakea_galaxy_server_dir }}" 
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
+
+  #- name: restart nginx
+  #  systemd:
+  #    state: restarted
+  #    name: nginx

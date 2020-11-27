@@ -49,16 +49,13 @@
   import_tasks: miniconda.yml
   become: yes
   become_user: galaxy
+  become_method: sudo
 
 - name: Include systemd role
   import_tasks: systemd.yml
 
 - name: Include nginx role
   import_tasks: nginx.yml
-
-- name: Include nginx role modified for ubuntu 20.04
-  import_tasks: nginx_UBUNTU_20.04.yml
-  ignore_errors: yes
 
 - name: Include proftpd role
   import_tasks: proftpd.yml
