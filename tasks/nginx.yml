@@ -120,11 +120,20 @@
     dest: /usr/share/nginx/modules/ngx_http_upload_module.so
   when: nginxload.changed
 
-- name: clean
-  file:
-    state: absent
-    path: /opt/
+- name: remove all nginx files
+  find:
+    paths: /opt
+    file_type: any
+  register: nginx_files_to_delete
   when: nginxload.changed
+
+- name: Ansible remove nginx files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+  when: nginxload.changed
+
 
     #- name: download and recompile nginx to add upload module
     #  become: true
