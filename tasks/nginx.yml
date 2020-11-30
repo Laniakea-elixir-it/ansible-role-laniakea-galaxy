@@ -131,7 +131,7 @@
   file:
     path: "{{ item.path }}"
     state: absent
-  with_items: "{{ files_to_delete.files }}"
+  with_items: "{{ nginx_files_to_delete.files }}"
   when: nginxload.changed
 
 
