@@ -76,9 +76,8 @@
 
 - name: '[Ubuntu 20.04]install nginx and compiler dep'
   apt:
-    name: ['nginx', 'libpcre3', 'libpcre3-dev', 'libssl-dev']
+    name: ['nginx-full', 'libpcre3', 'libpcre3-dev', 'libssl-dev']
     state: present
-    update_cache: true
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
 
 - name: modify nginx config
@@ -89,7 +88,7 @@
     state: present
   register: nginxload
   
-- name: '[Ubuntu 20.04] download nginx packages and module to compile and incorporate' 
+- name: '[Ubuntu 20.04] download nginx packages and module to compile and incorporate http uplaoad' 
   get_url:
     url: "{{ item}}"
     dest: /opt/
@@ -104,8 +103,8 @@
     dest: /opt
     remote_src: yes
   with_items:
-    - /opt/2.3.0.tar.gz
-    - /opt/nginx-1.18.tar.gz
+    - /opt/nginx-upload-module-2.3.0.tar.gz
+    - /opt/nginx-1.18.0.tar.gz
   when: nginxload.changed
 
 - name: compile
@@ -117,7 +116,7 @@
 - name: copy module to destination
   copy:
     remote_src: yes
-    src: /opt/objs/ngx_http_upload_module.so
+    src: /opt/nginx-1.18.0/objs/ngx_http_upload_module.so
     dest: /usr/share/nginx/modules/ngx_http_upload_module.so
   when: nginxload.changed
 
