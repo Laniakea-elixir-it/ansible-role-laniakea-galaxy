@@ -87,6 +87,7 @@
     line: 'load_module modules/ngx_http_upload_module.so;'
     state: present
   register: nginxload
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '20.04'
   
 - name: '[Ubuntu 20.04] download nginx packages and module to compile and incorporate http uplaoad' 
   get_url:
