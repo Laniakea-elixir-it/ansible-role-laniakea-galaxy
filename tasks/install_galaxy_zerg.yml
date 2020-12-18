@@ -26,7 +26,6 @@
         admin_email: "{{ GALAXY_ADMIN_EMAIL }}"
         admin_username: "{{ GALAXY_ADMIN_USERNAME }}"
         admin_password: "{{ GALAXY_ADMIN_PASSWORD }}"
-        master_api_key: "{{ GALAXY_ADMIN_API_KEY }}"
         database_connection: "postgresql:///galaxy?host=/var/run/postgresql"
         install_database_connection: "postgresql:///galaxy_tools?host=/var/run/postgresql"
         job_working_directory: /export/galaxy/database/job_working_directory
