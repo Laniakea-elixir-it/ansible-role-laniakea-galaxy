@@ -20,6 +20,16 @@
   become_user: galaxy
   when: uwsgi_mode == "zerg"
 
+- name: Remove unnecessary uwsgi configuration for zerg
+  lineinfile:
+    path: '{{ laniakea_galaxy_config_file }}'
+    regexp: '{{ item }}'
+    state: absent
+  with_items:
+    - '^\s+socket:.*$'
+    - '^\s+stats:.*$'
+  when: uwsgi_mode == "zerg"
+
 - name: Add zerg block
   blockinfile:
     path: '{{ laniakea_galaxy_config_file }}'
