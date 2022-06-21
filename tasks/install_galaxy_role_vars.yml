@@ -1,7 +1,7 @@
 ---
 - name: Include galaxy role
   include_role:
-    name: /home/daniele/github/ansible-galaxy
+    name: galaxyproject.galaxy
     public: true
   vars:
     galaxy_virtualenv_command: python3 -m virtualenv
