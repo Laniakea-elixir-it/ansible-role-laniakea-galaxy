@@ -1,7 +1,7 @@
 ---
 - name: Include galaxy role
   include_role:
-    name: galaxyproject.galaxy
+    name: /home/daniele/github/ansible-galaxy
     public: true
   vars:
     galaxy_virtualenv_command: python3 -m virtualenv
@@ -11,6 +11,8 @@
     galaxy_force_checkout: "{{ laniakea_galaxy_force_checkout }}"
     galaxy_separate_privileges: "{{ laniakea_galaxy_separate_privileges }}"
     galaxy_manage_paths: "{{ laniakea_galaxy_manage_paths }}"
+    galaxy_manage_systemd: yes
+    galaxy_systemd_mode: gravity
     galaxy_layout: "{{ laniakea_galaxy_layout }}"
     galaxy_privsep_user: "{{ laniakea_galaxy_privsep_user }}"
     galaxy_user: '{{ laniakea_galaxy_user }}' 
@@ -55,32 +57,51 @@
         tool_search_index_dir: '{{ database_path }}/tool_search_index_dir' 
         tool_cache_data_dir: '{{ database_path }}/tool_cache'
         tool_data_table_config_path: '{{ tool_tada_table_config_witch_cvmfs }}'
-
-      uwsgi:
-        socket: 127.0.0.1:4001
-        buffer-size: 16384
-        processes: "{{ laniakea_uwsgi_processes }}"
-        threads: "{{ laniakea_uwsgi_threads }}"
-        offload-threads: "{{ laniakea_uwsgi_offload_threads }}" 
-        static-map:
-          - /static/style={{ laniakea_galaxy_server_dir }}/static/style
-          - /static={{ laniakea_galaxy_server_dir }}/static
-          - /favicon.ico={{ laniakea_galaxy_server_dir }}/static/favicon.ico
-        static-safe: client/galaxy/images
-        master: true
-        virtualenv: "{{ laniakea_galaxy_venv_dir }}"
-        pythonpath: "{{ laniakea_galaxy_server_dir }}/lib"
-        #module: galaxy.webapps.galaxy.buildapp:uwsgi_app()
-        mount: /galaxy=galaxy.webapps.galaxy.buildapp:uwsgi_app()
-        manage-script-name: true
-        thunder-lock: true
-        die-on-term: true
-        hook-master-start:
-          - unix_signal:2 gracefully_kill_them_all
-          - unix_signal:15 gracefully_kill_them_all
-        py-call-osafterfork: true
-        enable-threads: true
-        stats: 127.0.0.1:4010
-        #change log from tmp to var/log/galaxy
-        logto: "{{ galaxy_log_path }}/uwsgi.log"
-        no-orphans: true
+      gravity:
+        galaxy_root: "{{ galaxy_install_path }}"
+        app_server: gunicorn
+        gunicorn:
+          # listening options
+          bind: "unix:{{ galaxy_mutable_config_dir }}/gunicorn.sock"
+          # performance options
+          workers: 2
+          # Other options that will be passed to gunicorn
+          extra_args: '--forwarded-allow-ips="*"'
+          preload: true
+        celery:
+          concurrency: 2
+          loglevel: DEBUG
+        handlers:
+          handler:
+            processes: 3
+            pools:
+              - job-handler
+              - workflow-scheduler
+#      uwsgi:
+#        socket: 127.0.0.1:4001
+#        buffer-size: 16384
+#        processes: "{{ laniakea_uwsgi_processes }}"
+#        threads: "{{ laniakea_uwsgi_threads }}"
+#        offload-threads: "{{ laniakea_uwsgi_offload_threads }}" 
+#        static-map:
+#          - /static/style={{ laniakea_galaxy_server_dir }}/static/style
+#          - /static={{ laniakea_galaxy_server_dir }}/static
+#          - /favicon.ico={{ laniakea_galaxy_server_dir }}/static/favicon.ico
+#        static-safe: client/galaxy/images
+#        master: true
+#        virtualenv: "{{ laniakea_galaxy_venv_dir }}"
+#        pythonpath: "{{ laniakea_galaxy_server_dir }}/lib"
+#        #module: galaxy.webapps.galaxy.buildapp:uwsgi_app()
+#        mount: /galaxy=galaxy.webapps.galaxy.buildapp:uwsgi_app()
+#        manage-script-name: true
+#        thunder-lock: true
+#        die-on-term: true
+#        hook-master-start:
+#          - unix_signal:2 gracefully_kill_them_all
+#          - unix_signal:15 gracefully_kill_them_all
+#        py-call-osafterfork: true
+#        enable-threads: true
+#        stats: 127.0.0.1:4010
+#        #change log from tmp to var/log/galaxy
+#        logto: "{{ galaxy_log_path }}/uwsgi.log"
+#        no-orphans: true

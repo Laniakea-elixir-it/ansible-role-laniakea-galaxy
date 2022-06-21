@@ -1,23 +1,23 @@
 ---
 
-- name: Include systemd role mule
-  include_role:
-    name: usegalaxy_eu.galaxy_systemd  
-  vars:
-    galaxy_systemd_handler_env: ""
-    galaxy_systemd_workflow_scheduler_env: ""
-    galaxy_config_file: '{{ laniakea_galaxy_config_file }}' 
-    galaxy_systemd_mode: "{{ uwsgi_mode }}"
-  when: uwsgi_mode == "mule"
-
-- name: Include systemd role zerg
-  include_role:
-    name: usegalaxy_eu.galaxy_systemd  
-  vars:
-    galaxy_systemd_handler_env: ""
-    galaxy_systemd_workflow_scheduler_env: ""
-    galaxy_systemd_handlers: 4
-    galaxy_config_file: '{{ laniakea_galaxy_config_file }}' 
-    galaxy_systemd_zergling_uwsgi_config_style: yaml
-    galaxy_systemd_mode: "{{ uwsgi_mode }}"
-  when: uwsgi_mode == "zerg"
+#- name: Include systemd role mule
+#  include_role:
+#    name: usegalaxy_eu.galaxy_systemd  
+#  vars:
+#    galaxy_systemd_handler_env: ""
+#    galaxy_systemd_workflow_scheduler_env: ""
+#    galaxy_config_file: '{{ laniakea_galaxy_config_file }}' 
+#    galaxy_systemd_mode: "{{ uwsgi_mode }}"
+#  when: uwsgi_mode == "mule"
+#
+#- name: Include systemd role zerg
+#  include_role:
+#    name: usegalaxy_eu.galaxy_systemd  
+#  vars:
+#    galaxy_systemd_handler_env: ""
+#    galaxy_systemd_workflow_scheduler_env: ""
+#    galaxy_systemd_handlers: 4
+#    galaxy_config_file: '{{ laniakea_galaxy_config_file }}' 
+#    galaxy_systemd_zergling_uwsgi_config_style: yaml
+#    galaxy_systemd_mode: "{{ uwsgi_mode }}"
+#  when: uwsgi_mode == "zerg"

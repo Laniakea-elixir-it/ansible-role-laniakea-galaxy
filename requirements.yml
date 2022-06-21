@@ -3,7 +3,7 @@
 
 # requirements to install galaxy
 - src: galaxyproject.galaxy
-  version: 0.9.5
+  version: master 
 
 - src: galaxyproject.nginx
   version: 0.6.4
