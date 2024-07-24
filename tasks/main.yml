@@ -21,6 +21,11 @@
 - name: include galaxy role
   include: install_galaxy.yml
 
+- name: Set default job conf
+  import_tasks: job_conf.yml
+  become: true
+  become_user: "{{ laniakea_galaxy_user.name }}"
+
 - name: Include miniconda role run by galaxy user
   import_tasks: miniconda.yml
   become: true
@@ -35,28 +40,22 @@
 - name: Include nginx role
   import_tasks: nginx.yml
 
-- name: Enable Galaxy Interactive Tools
-  import_tasks: galaxy_it.yml
-  when: enable_interactive_tools
+#- name: Enable Galaxy Interactive Tools
+#  import_tasks: galaxy_it.yml
+#  when: enable_interactive_tools
 
 # Start the Galaxy production environment.
 # The Galaxy DB is now populated at startup, therefore we need to start it before user creation.
 # See here: https://github.com/galaxyproject/ansible-galaxy/pull/112
 # The old task to populate the database is here: https://github.com/indigo-dc/ansible-role-galaxycloud/blob/master/tasks/postgresql.yml
-#- name: Start Galaxy here
-#  meta: flush_handlers
+- name: Start Galaxy here
+  meta: flush_handlers
 #
-
-- name: galaxy systemd start
-  systemd:
-    name: galaxy.service
-    state: started
-  when: galaxy_version == "release_22.05"
 
 - name: "[VM] Wait Galaxy"
   wait_for:
     host: 127.0.0.1
-    port: "4001"
+    path: "{{ galaxy_mutable_config_dir }}/gunicorn.sock"
     timeout: 300
 
 - name: create admin user

@@ -1,7 +1,7 @@
 ---
 - name: "Mount galaxyproject and elixir-italy CVMFS"
   include_role:
-    name: laniakea.cvmfs_client_config
+    name: ansible-role-laniakea-cvmfs-client-config
   vars:
     elixir_it_repo: '{{ enable_elixir_it_cvmfs }}'
 

@@ -2,7 +2,7 @@
 - hosts: galaxyservers
   become: true
   vars:
-    GALAXY_VERSION: release_22.05
+    GALAXY_VERSION: release_23.0
     GALAXY_ADMIN_USERNAME: "admin"
     GALAXY_ADMIN_PASSWORD: "*****"
     GALAXY_ADMIN_API_KEY: "admin_key"

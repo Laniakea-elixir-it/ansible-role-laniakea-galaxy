@@ -2,13 +2,14 @@ runners:
   local_runner:
     load: galaxy.jobs.runners.local:LocalJobRunner
     workers: 4
-
+handling:
+  assign: ['db-skip-locked']
 execution:
-  default: local_dest
   environments:
-    local_dest:
+    local_env:
       runner: local_runner
-
+      local_slots: {{ galaxy_workers }}
+      tmp_dir: true
 tools:
-- class: local # these special tools that aren't parameterized for remote execution - expression tools, upload, etc
-  execution: local_dest
+  - class: local # these special tools that aren't parameterized for remote execution - expression tools, upload, etc
+    environment: local_env

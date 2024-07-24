@@ -1,5 +1,12 @@
 ---
-
+- name: Ensure postgresql service running
+  systemd:
+    name: '{{ postgresql_service }}'
+    state: restarted
+    enabled: true
+  become_user: root
+  become_method: sudo
+  
 - name: Query database for user API_KEY 
   become: true
   become_user: postgres
@@ -24,7 +31,7 @@
 
 - name: Create random admin user api key
   set_fact:
-    GALAXY_ADMIN_API_KEY: "{{ lookup('password', '/dev/null length=50') }}"
+    GALAXY_ADMIN_API_KEY: "{{ lookup('password', '/dev/null length=32') }}"
   no_log: True
   when: galaxy_admin_api_key == "random"
 

@@ -3,13 +3,13 @@
 
 # requirements to install galaxy
 - src: https://github.com/galaxyproject/ansible-galaxy
-  version: 0.10.4
+  version: 0.10.14
 
 - src: https://github.com/galaxyproject/ansible-nginx
   version: 0.7.1
 
 - src: https://github.com/galaxyproject/ansible-postgresql
-  version: 1.1.2
+  version: 1.1.6
 
 - src: https://github.com/galaxyproject/ansible-postgresql-objects
   version: 1.2.0
@@ -27,12 +27,12 @@
 
 # - src: galaxyproject.proftpd
 
-- name: https://github.com/galaxyproject/ansible-role-tusd
+- src: https://github.com/galaxyproject/ansible-role-tusd
   version: 0.0.1  
 
 - src: https://github.com/galaxyproject/ansible-cvmfs
   version: 0.2.14
 
-- src: https://github.com/Laniakea-elixir-it/ansible-role-laniakea-galaxy-interactive-tools
+# - src: https://github.com/Laniakea-elixir-it/ansible-role-laniakea-galaxy-interactive-tools
 
 - src: https://github.com/Laniakea-elixir-it/ansible-role-laniakea-cvmfs-client-config

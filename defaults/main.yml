@@ -26,7 +26,7 @@ galaxy_log_path: /var/log/galaxy
 database_path: "{{ export_dir }}/galaxy/database"
 
 # Galaxy version to install
-galaxy_version: release_22.05
+galaxy_version: release_23.0
 
 # Galaxy virtual elastic cluster support: Currently supported local and slurm
 galaxy_lrms: local
@@ -87,7 +87,8 @@ GALAXY_ADMIN_EMAIL: "admin@server.com"
 
 #______________________________________
 # Postgres database details
-laniakea_postgresql_version: 11
+laniakea_postgresql_version: 12
+postgresql_service: 'postgresql-{{ laniakea_postgresql_version }}'
 
 galaxy_postgresql_objects_users:
   - name: galaxy
