@@ -56,7 +56,7 @@
   wait_for:
     host: 127.0.0.1
     path: "{{ galaxy_mutable_config_dir }}/gunicorn.sock"
-    timeout: 300
+    timeout: 500
 
 - name: create admin user
   include: admin_user.yml
