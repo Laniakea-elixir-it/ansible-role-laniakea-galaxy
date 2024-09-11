@@ -117,7 +117,7 @@
           handler:
             processes: 3
             pools:
-              - job-handler
+              - job-handlers
               - workflow-scheduler
         tusd:
           enable: true
