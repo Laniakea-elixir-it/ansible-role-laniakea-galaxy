@@ -21,14 +21,9 @@
     galaxy_mutable_config_dir: "{{ laniakea_galaxy_config_dir }}"
     galaxy_config_file: "{{ laniakea_galaxy_config_file }}"
     galaxy_commit_id: "{{ galaxy_version }}"
-      #galaxy_config_style: yaml
 
     galaxy_tusd_port: 1080
     galaxy_server_dir: "{{ laniakea_galaxy_server_dir }}"
-
-#    galaxy_config_templates:
-#      - src: templates/galaxy/config/job_conf.yml.j2
-#        dest: "{{ galaxy_config.galaxy.job_config_file }}"
 
     galaxy_config:
       galaxy:
@@ -54,45 +49,44 @@
         nginx_upload_store: "{{ database_path }}/tmp/nginx_upload_store"
         nginx_upload_path: "/galaxy/_upload"
         nginx_x_accel_redirect_base: "/_x_accel_redirect"
-        new_user_dataset_access_role_default_private: "True"
-        ftp_upload_dir: "{{ database_path }}/ftp"
-        ftp_upload_site: ftp://localhost
+        visualization_plugins_directory: config/plugins/visualizations
+        #ftp_upload_dir: "{{ database_path }}/ftp"
+        #ftp_upload_site: ftp://localhost
         # SQL Performance
-        database_engine_option_server_side_cursors: true
         slow_query_log_threshold: 5
         enable_per_request_sql_debugging: true
         # Automation / Ease of Use / User-facing features
-        watch_job_rules: "auto"
+        watch_job_rules: 'auto'
         allow_path_paste: true
         enable_quotas: true
-        require_login: "True"
-        allow_user_creation: "True"
-        allow_user_impersonation: "True"
+        require_login: true
+        allow_user_creation: true
+        allow_user_impersonation: true
         allow_user_deletion: true
         show_welcome_with_login: true
         expose_user_name: true
         expose_dataset_path: true
         expose_potentially_sensitive_job_metrics: true
-        # NFS workarounds
-        retry_job_output_collection: 3
         # Debugging
         cleanup_job: onsuccess
+        # NFS workarounds
+        retry_job_output_collection: 3
         # Tool security
         outputs_to_working_directory: true
+        new_user_dataset_access_role_default_private: true
 
         # TUS
         tus_upload_store: "{{ database_path }}/tus"
-        galaxy_infrastructure_url: "https://{{ inventory_hostname }}/galaxy"
-
+        galaxy_infrastructure_url: "https://{{ ansible_default_ipv4.address }}/galaxy"
+        # Conda  
         conda_prefix: "{{ laniakea_conda_prefix }}"
         conda_auto_install: true
-        #add test-toolshed
+        conda_ensure_channels: 'iuc,conda-forge,bioconda,bgruening'
+        # Add test-toolshed
         tool_sheds_config_file: "{{ laniakea_galaxy_config_dir }}/tool_sheds_conf.xml"
-        #release_20.05 variables
-        tool_search_index_dir: "{{ database_path }}/tool_search_index_dir"
-        tool_cache_data_dir: "{{ database_path }}/tool_cache"
+        # Tool data table path  
         tool_data_table_config_path: "{{ tool_data_table_config_with_cvmfs }}"
-
+        # Add Galaxy prefix
         galaxy_url_prefix: /galaxy
 
       gravity:
@@ -100,15 +94,17 @@
         galaxy_root: "{{ galaxy_root }}/server"
         galaxy_user: "{{ laniakea_galaxy_user.name }}"
         virtualenv: "{{ galaxy_venv_dir }}"
-          #app_server: gunicorn
         gunicorn:
           # listening options
           bind: "unix:{{ galaxy_mutable_config_dir }}/gunicorn.sock"
-          #bind: "127.0.0.1:4001"
           # performance options
           workers: 2
           # Other options that will be passed to gunicorn
+          # This permits setting of 'secure' headers like REMOTE_USER (and friends)
+          # https://docs.gunicorn.org/en/stable/settings.html#forwarded-allow-ips
           extra_args: '--forwarded-allow-ips="*"'
+          # This lets Gunicorn start Galaxy completely before forking which is faster.
+          # https://docs.gunicorn.org/en/stable/settings.html#preload-app
           preload: true
         celery:
           concurrency: 2
@@ -123,6 +119,6 @@
           enable: true
           tusd_path: /usr/local/sbin/tusd
           upload_dir: "{{ database_path }}/tus"
-        gx_it_proxy:
-          enable: "{{ enable_interactive_tools }}"
-          port: "{{ default_gx_it_proxy_port }}"
+        #gx_it_proxy:
+        #  enable: "{{ enable_interactive_tools }}"
+        #  port: "{{ default_gx_it_proxy_port }}"
