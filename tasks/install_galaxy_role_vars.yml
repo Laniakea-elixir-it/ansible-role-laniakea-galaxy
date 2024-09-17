@@ -36,18 +36,11 @@
         check_migrate_tools: false
         tool_data_path: "{{ galaxy_mutable_data_dir }}/tool-data"
         tool_dependency_dir: "{{ tool_deps_path }}"
-        template_cache_path: "{{ database_path }}/compiled_templates"
-        citation_cache_data_dir: "{{ database_path }}/citations/data"
-        citation_cache_lock_dir: "{{ database_path }}/citations/lock"
-        whoosh_index_dir: "{{ database_path }}/whoosh_indexes"
-        object_store_cache_path: "{{ database_path }}/object_store_cache"
         object_store_store_by: uuid
         # id_secret: "{{ vault_id_secret }}" # unсomment if use vault encryption
         job_config_file: "{{ galaxy_config_dir }}/job_conf.yml"
         job_working_directory: "{{ database_path }}/job_working_directory"
-        cluster_file_directory: "{{ database_path }}/pbs"
         nginx_upload_store: "{{ database_path }}/tmp/nginx_upload_store"
-        nginx_upload_path: "/galaxy/_upload"
         nginx_x_accel_redirect_base: "/_x_accel_redirect"
         visualization_plugins_directory: config/plugins/visualizations
         #ftp_upload_dir: "{{ database_path }}/ftp"
@@ -67,8 +60,6 @@
         expose_user_name: true
         expose_dataset_path: true
         expose_potentially_sensitive_job_metrics: true
-        # Debugging
-        cleanup_job: onsuccess
         # NFS workarounds
         retry_job_output_collection: 3
         # Tool security
