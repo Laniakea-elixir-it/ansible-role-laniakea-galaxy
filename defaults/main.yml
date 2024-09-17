@@ -87,7 +87,7 @@ GALAXY_ADMIN_EMAIL: "admin@server.com"
 
 #______________________________________
 # Postgres database details
-laniakea_postgresql_version: 12
+laniakea_postgresql_version: 13
 postgresql_service: 'postgresql-{{ laniakea_postgresql_version }}'
 
 galaxy_postgresql_objects_users:
