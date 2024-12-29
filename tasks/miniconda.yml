@@ -3,7 +3,7 @@
   include_role:
     name: ansible-miniconda
     public: true 
-  vars:
-    miniconda_prefix: "{{ laniakea_miniconda_prefix }}"
-    miniconda_version: "{{ laniakea_miniconda_version }}"
-    miniconda_manage_dependencies: "{{ laniakea_manage_dependencies }}"
+      #  vars:
+      #    miniconda_prefix: "{{ laniakea_miniconda_prefix }}"
+      #    miniconda_version: "{{ laniakea_miniconda_version }}"
+      #    miniconda_manage_dependencies: "{{ laniakea_manage_dependencies }}"
