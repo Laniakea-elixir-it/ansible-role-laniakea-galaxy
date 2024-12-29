@@ -2,8 +2,8 @@
 - name: Include miniconda role
   include_role:
     name: ansible-miniconda
-    public: true 
+    public: true
   vars:
-    miniconda_prefix: "{{ laniakea_miniconda_prefix }}"
-    miniconda_version: "{{ laniakea_miniconda_version }}"
-    miniconda_manage_dependencies: "{{ laniakea_manage_dependencies }}"
+    miniconda_prefix: '{{ export_dir }}/tool_deps/_conda'
+    miniconda_version: 24.11.2
+    miniconda_channels: ['conda-forge', 'bioconda']
