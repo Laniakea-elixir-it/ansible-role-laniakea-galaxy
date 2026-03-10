@@ -22,7 +22,7 @@ laniakea_galaxy_commit_id: "{{ galaxy_version }}"
 laniakea_galaxy_config_style: yaml
 laniakea_conda_prefix: '{{ tool_deps_path }}/_conda'
 laniakea_miniconda_prefix: "{{ galaxy_tool_dependency_dir }}/_conda"
-laniakea_miniconda_version: 4.7.12
+laniakea_miniconda_version: 24.11.2
 laniakea_miniconda_manage_dependencies: false
 
 
