@@ -7,3 +7,11 @@
     src: 'tool_sheds_conf.xml.j2'
     dest: '{{ laniakea_galaxy_config_dir }}/tool_sheds_conf.xml'
 
+- name: Deploy custom Galaxy welcome page
+  copy:
+    src: galaxy_custom_welcome.html
+    dest: '{{ laniakea_galaxy_server_dir }}/static/welcome.html'
+    owner: galaxy
+    group: galaxy
+    mode: "0644"
+  become: true
