@@ -25,15 +25,15 @@
     postgresql_objects_users: "{{ galaxy_postgresql_objects_users }}"
     postgresql_objects_databases: "{{ galaxy_postgresql_objects_databases }}"
 
-  # Fix Galaxy PostgreSQL public schema permissions
-  - name: Grant schema privileges to Galaxy DB user
-    community.postgresql.postgresql_privs:
-      db: "{{ item }}"
-      privs: CREATE,USAGE
-      type: schema
-      objs: public
-      roles: "{{ galaxy_postgresql_objects_users | map(attribute='name') | join(',') }}"
-      login_user: postgres
-    become: true
-    become_user: postgres
-    loop: "{{ galaxy_postgresql_objects_databases | map(attribute='name') | list }}"
+# Fix Galaxy PostgreSQL public schema permissions
+- name: Grant schema privileges to Galaxy DB user
+  community.postgresql.postgresql_privs:
+    db: "{{ item }}"
+    privs: CREATE,USAGE
+    type: schema
+    objs: public
+    roles: "{{ galaxy_postgresql_objects_users | map(attribute='name') | join(',') }}"
+    login_user: postgres
+  become: true
+  become_user: postgres
+  loop: "{{ galaxy_postgresql_objects_databases | map(attribute='name') | list }}"
