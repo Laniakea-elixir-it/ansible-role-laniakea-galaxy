@@ -6,28 +6,25 @@
     tus_upload_store: "{{ database_path }}/tus"
     galaxy_tusd_port: 1080
 
-- name: Check that tusd instance is listening on its port
+- name: Check that tusd is listening on port {{ galaxy_tusd_port }}
   wait_for:
-    port: "{{ item.port }}"
+    port: "{{ galaxy_tusd_port }}"
     host: 127.0.0.1
     timeout: 30
     state: started
   register: tusd_port_check
   ignore_errors: true
-  loop: "{{ tusd_instances }}"
  
 - name: Restart tusd via systemd if not responding on its port
   systemd:
-    name: "tusd-{{ item.item.name }}.service"
+    name: tusd.service
     state: restarted
     enabled: true
-  loop: "{{ tusd_port_check.results }}"
-  when: item is failed
+  when: tusd_port_check is failed
  
-- name: Wait for tusd instance to be available on its port (fails if not responding)
+- name: Wait for tusd to be available on port {{ galaxy_tusd_port }} (fails if not responding)
   wait_for:
-    port: "{{ item.port }}"
+    port: "{{ galaxy_tusd_port }}"
     host: 127.0.0.1
     timeout: 30
     state: started
-  loop: "{{ tusd_instances }}"
