@@ -90,6 +90,11 @@ server {
     #redirect /prefix -> /prefix/
     rewrite ^/galaxy$ /galaxy/ last;
 
+    # redirect da /galaxy/galaxy a /galaxy
+    location ~ ^/galaxy/galaxy/?$ {
+        return 301 /galaxy;
+    }
+
     location /robots.txt {
         alias {{ galaxy_server_dir }}/static/robots.txt;
     }
