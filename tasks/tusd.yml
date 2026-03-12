@@ -17,7 +17,7 @@
  
 - name: Restart tusd via systemd if not responding on its port
   systemd:
-    name: tusd.service
+    name: galaxy-tusd.service
     state: restarted
     enabled: true
   when: tusd_port_check is failed
